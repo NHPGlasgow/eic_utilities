@@ -1,0 +1,8 @@
+#PBS -N EPIC
+#PBS -V 
+#PBS -l walltime=99:00:00,file=200000000kb
+
+#eic_run jobrun.sh
+#singularity exec --bind /w /cvmfs/singularity.opensciencegrid.org/eicweb/jug_xl:nightly source /opt/detector/setup.sh jobrun.py
+#echo $PATH
+singularity exec --bind /w,/scratch /cvmfs/singularity.opensciencegrid.org/eicweb/jug_xl:nightly /home/simong/eic/jobsim.sh
