@@ -37,6 +37,7 @@ do
     export BASENAME=$base
 
     jobName="EPIC_"$base"_"$run
+    export JOBNAME=$jobName
 
     export RUN=$run
     export JUGGLER_N_EVENTS=$NEVENTS

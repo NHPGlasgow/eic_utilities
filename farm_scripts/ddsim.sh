@@ -2,7 +2,7 @@
 
 source /opt/detector/epic-nightly/setup.sh
 
-tempdir=/scratch/$USER/ddsim_$RUN
+tempdir=/scratch/$USER/$JOBNAME
 mkdir -p ${tempdir}
 
 datadir=${tempdir}/data
