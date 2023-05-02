@@ -1,6 +1,6 @@
 #PBS -N EPIC
 #PBS -V 
-#PBS -l walltime=99:00:00,file=200000000kb
+#PBS -l walltime=24:00:00,file=200000000kb
 
 #echo $PWD
 cd $SIM_DIR
