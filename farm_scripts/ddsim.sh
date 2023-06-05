@@ -2,7 +2,7 @@
 
 source /opt/detector/epic-nightly/setup.sh
 
-tempdir=/scratch/$USER/$JOBNAME
+tempdir=/scratch/$USER/ddsim_$BASENAME"_"$JOB
 mkdir -p ${tempdir}
 
 datadir=${tempdir}/data
@@ -16,8 +16,8 @@ mkdir -p ${outdir}
 cp $WORK_FILE $datadir
 
 datafile=$datadir/$BASEFILE
-outfile=$outdir/$BASENAME.edm4hep.root
-logfile=$logdir/$BASENAME.log
+outfile=$outdir/$BASENAME"_"$JOB.edm4hep.root
+logfile=$logdir/$BASENAME"_"$JOB.log
 
 export JUGGLER_MC_FILE=$datafile
 export JUGGLER_SIM_FILE=$outfile
