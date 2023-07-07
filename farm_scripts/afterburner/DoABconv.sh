@@ -85,7 +85,7 @@ do
 	firstevent=$(($seg*$nevents))
 	outfile=$outdir/"AB_"$basefile"_"$seg
 	echo "segment: $seg    first event: $firstevent    output file: $outfile"
-	abconv -p ip6_hidiv_41x5 -s $firstevent -l $nevents --plot-off $file -o $outfile
+	abconv -p $config -s $firstevent -l $nevents --plot-off $file -o $outfile
     done
 done
 
