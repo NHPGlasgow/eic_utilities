@@ -87,13 +87,14 @@ do
 	export NJOBS=1
 	neventsim=$neventsfile
     else
-	export NJOBS=$(($neventsfile / $neventsim))
+	#export NJOBS=$(($neventsfile / $neventsim))
+	export NJOBS=1
     fi
     
     
     export BASEFILE=${file##*/}
     export BASENAME=${BASEFILE%.hepmc}
-
+    export STEERINGFILE=$PWD"/steering.py"
 
     echo "Submitting $NJOBS jobs with $neventsim events per job, for MC file: $BASEFILE"
     
@@ -119,7 +120,7 @@ do
 	elif [ $batchmode == "npc" ]
 	then
 	    echo "npcing"
-	    #./jobexec.sh &
+	    ./jobexec.sh &
 	fi
 	sleep 1
     done
