@@ -3,10 +3,13 @@
 #echo "Job started at $(date) on $(hostname)"
 
 #source /opt/detector/epic-main/bin/thisepic.sh
-#source /opt/local/bin/eicrecon-this.sh
-source /home/garyp/eic/setup_local.sh
+source /opt/detector/epic-25.05.0/bin/thisepic.sh
+source /opt/local/bin/eicrecon-this.sh
 
-tempdir=/scratch/$USER/ddsim_$BASENAME
+export DETECTOR_CONFIG=$THIS_DETECTOR_CONFIG
+export DETECTOR_PATH_NAME="$DETECTOR_PATH/$DETECTOR_CONFIG.xml"
+
+tempdir=/scratch/$USER/$FILEBASE"_"$JOB
 mkdir -p ${tempdir}
 cd $tempdir
 cp $STEERINGFILE $tempdir
@@ -30,7 +33,7 @@ if [[ ! -f $ABoutfile ]]
 then
     #if afterburned segment doesnt exist in correct place, do it
     #echo "No afterburned datafile for Segment/Run $JOB, running afterburner" 
-    abconv -p 1 -s $FIRSTEVENT -l $LASTEVENT --plot-off $datafile -o $ABoutfile >> $ablogfile 2>&1
+    abconv -p 0 -s $FIRSTEVENT -e $LASTEVENT --plot-off $datafile -o $ABoutfile >> $ablogfile 2>&1
 fi
 
 echo "AB complete at $(date) on $(hostname)"
@@ -48,16 +51,16 @@ export JUGGLER_SIM_FILE=$outfile
 #do simulation
 ddsim --steeringFile steering.py \
     --numberOfEvents ${JUGGLER_N_EVENTS} \
-    --compactFile ${DETECTOR_PATH}/${DETECTOR_CONFIG}.xml \
+    --compactFile ${DETECTOR_PATH_NAME} \
     --inputFiles ${JUGGLER_MC_FILE}  \
     --outputFile  ${JUGGLER_SIM_FILE} \
-    -v 'WARNING' \
+#    -v 'WARNING' \
     >> $logfile 2>&1
 
 echo "Simulation complete at $(date) on $(hostname)"
 
 #do reconstruction
-eicrecon $JUGGLER_SIM_FILE >> $reconlogfile 2>&1
+eicrecon -Pdd4hep:xml_files=${DETECTOR_PATH_NAME} $JUGGLER_SIM_FILE >> $reconlogfile 2>&1
 
 echo "Reconstruction complete at $(date) on $(hostname)"
 
@@ -67,8 +70,6 @@ mv $JUGGLER_SIM_FILE $WORK_OUT_DIR
 mv $logfile $WORK_LOG_DIR
 mv $reconlogfile $WORK_RECON_LOG_DIR
 mv $ablogfile $WORK_AB_LOG_DIR
-#rm $datafile
-#rmdir $datadir $logdir $outdir
 cd
 rm -rf $tempdir
 
