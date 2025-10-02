@@ -52,18 +52,27 @@ else
     config="18x275"
 fi
 
-config_list={"5x41","10x100","18x275"}
+config_list={"5x41","10x100","10x130","10x130_H2","18x275"}
 if [[ !($config_list =~ $config) ]];
 then
     echo "Invalid energy config"
     exit 2
 fi
 
+if [[ $config == "10x130_H2" ]]
+then
+    abconfig="ip6_eD_130x10"
+else
+    abconfig=0
+fi
+
 ##need to set a temp variable here
 ##source setup script in container
 ##then set DETECTOR_CONFIG to the temp variable
 export THIS_DETECTOR_CONFIG="epic_craterlake_"$config
+export THIS_AB_CONFIG=$abconfig
 echo "DETECTOR_CONFIG is $THIS_DETECTOR_CONFIG"
+echo "AB_CONFIG is $THIS_AB_CONFIG"
 
 #Set these as appropriate to user
 #In theory these lines should be the only needed changes.
