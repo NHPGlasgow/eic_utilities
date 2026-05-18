@@ -14,4 +14,4 @@ fi
 
 #singularity exec --bind /w,/scratch /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly ./ddsim.sh
 
-singularity exec --bind /w,/scratch /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:26.03.1-stable ./ddsim.sh
+singularity exec --bind /w,/scratch /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:26.05.0-stable ./ddsim.sh

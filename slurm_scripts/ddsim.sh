@@ -9,7 +9,7 @@ source /opt/local/bin/eicrecon-this.sh
 export DETECTOR_CONFIG=$THIS_DETECTOR_CONFIG
 export DETECTOR_PATH_NAME="$DETECTOR_PATH/$DETECTOR_CONFIG.xml"
 
-tempdir=/scratch/$USER/$FILEBASE"_"$JOB
+tempdir=/scratch/$USER/$JOBNAME
 mkdir -p ${tempdir}
 cd $tempdir
 cp $STEERINGFILE $tempdir
@@ -35,7 +35,7 @@ reconlogfile=$tempdir"/"$BASENAME"_recon.log"
 
 
 ##setup simulation input output based on AB output
-export JUGGLER_MC_FILE=$ABoutfile".hepmc"
+export JUGGLER_MC_FILE=$ABoutfile".hepmc3.tree.root"
 export JUGGLER_SIM_FILE=$outfile
 
 export FULL_SIM_FILE=$WORK_OUT_DIR"/"$BASENAME".edm4hep.root"
