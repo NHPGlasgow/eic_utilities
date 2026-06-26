@@ -25,7 +25,38 @@ EOF
 exit 1
 }
 
+SIM_ONLY=0
+RECON_ONLY=0
 
+# Parse extra flags (after positional args)
+for arg in "$@"; do
+    case "$arg" in
+        --sim-only)
+            SIM_ONLY=1
+            ;;
+        --recon-only)
+            RECON_ONLY=1
+            ;;
+    esac
+done
+
+if [[ $SIM_ONLY -eq 1 && $RECON_ONLY -eq 1 ]]; then
+    echo "ERROR: Cannot use --sim-only and --recon-only together"
+    exit 2
+fi
+
+
+export RUN_SIM=1
+export RUN_RECON=1
+
+if [[ $SIM_ONLY -eq 1 ]]; then
+    export RUN_RECON=0
+elif [[ $RECON_ONLY -eq 1 ]]; then
+    export RUN_SIM=0
+fi
+
+echo "RUN_SIM:   $RUN_SIM"
+echo "RUN_RECON: $RUN_RECON"
 
 # -------------------------------
 # Detector Config function
@@ -68,6 +99,9 @@ nevents=${5:-10000}
 first_seg=${6:-0}
 abconfig=${7:-"0"}
 outdir=${8:-"$PWD/output"}
+
+MAX_JOBS=10
+pids=()
 
 # -------------------------------
 # Validate batch mode
@@ -244,6 +278,24 @@ for file in "${files[@]}"; do
         elif [[ "$batchmode" == "npc" ]]; then
 	    echo "[NPC] Running $JOBNAME locally"
 	    ./jobexec.sh >> "$FARM_LOG_DIR/${JOBNAME}.log" 2>&1 &
+	    # store PID of this job
+	    pids+=($!)
+	    
+	    # --- throttle ---
+	    while (( ${#pids[@]} >= MAX_JOBS )); do
+		# wait for any job to finish
+		wait -n
+		
+		# clean up finished PIDs
+		new_pids=()
+		for pid in "${pids[@]}"; do
+		    if kill -0 "$pid" 2>/dev/null; then
+			new_pids+=($pid)
+		    fi
+		done
+		pids=("${new_pids[@]}")
+	    done
+	    
 	elif [[ "$batchmode" == "dry" ]]; then
 	    echo "[DRY RUN] Would execute job:"
 	    echo "  JOBNAME     = $JOBNAME"
@@ -253,6 +305,8 @@ for file in "${files[@]}"; do
 	    echo "  LASTEVENT   = $LASTEVENT"
 	    echo "  NEVENTS     = $JUGGLER_N_EVENTS"
 	    echo "  OUTPUT      = $WORK_RECON_DIR/${BASENAME}_recon.root"
+	    echo "  RUN_SIM     = $RUN_SIM"
+	    echo "  RUN_RECON   = $RUN_RECON"
 	fi
         sleep 1
     done
