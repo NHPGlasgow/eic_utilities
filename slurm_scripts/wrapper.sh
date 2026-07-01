@@ -11,7 +11,7 @@ Usage:
   $0 <batchmode> <input> [options]
 
 Required:
-  batchmode        farm | npc
+  batchmode        pbs | slurm | npc
   input            file or directory
 
 Optional:
@@ -106,8 +106,8 @@ pids=()
 # -------------------------------
 # Validate batch mode
 # -------------------------------
-if [[ "$batchmode" != "farm" && "$batchmode" != "npc" && "$batchmode" != "dry" ]]; then
-    echo "ERROR: batchmode must be 'farm', 'npc', or 'dry'"
+if [[ "$batchmode" != "pbs" && "$batchmode" != "slurm" && "$batchmode" != "npc" && "$batchmode" != "dry" ]]; then
+    echo "ERROR: batchmode must be 'pbs', 'slurm', 'npc', or 'dry'"
     exit 2
 fi
 
@@ -269,11 +269,19 @@ for file in "${files[@]}"; do
             continue
         fi
 
-        if [[ "$batchmode" == "farm" ]]; then
+       if [[ "$batchmode" == "slurm" ]]; then
             sbatch \
               -J "$JOBNAME" \
               -o "$FARM_LOG_DIR/${JOBNAME}_out.log" \
               -e "$FARM_LOG_DIR/${JOBNAME}_err.log" \
+              jobexec.sh
+        if [[ "$batchmode" == "pbs" ]]; then
+            qsub \
+	      -V \
+	      -q clas12 \
+              -N "$JOBNAME" \
+              -o "$FARM_LOG_DIR" \
+              -e "$FARM_LOG_DIR" \
               jobexec.sh
         elif [[ "$batchmode" == "npc" ]]; then
 	    echo "[NPC] Running $JOBNAME locally"

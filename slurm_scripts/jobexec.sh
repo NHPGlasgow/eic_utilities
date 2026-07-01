@@ -4,6 +4,8 @@
 #SBATCH --mail-user="gary.penman@glasgow.ac.uk"
 #SBATCH --export=ALL
 
+#PBS -V
+
 echo "Job started at $(date) on $(hostname)"
 cd $SIM_DIR
 
