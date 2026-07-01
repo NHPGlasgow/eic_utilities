@@ -275,7 +275,7 @@ for file in "${files[@]}"; do
               -o "$FARM_LOG_DIR/${JOBNAME}_out.log" \
               -e "$FARM_LOG_DIR/${JOBNAME}_err.log" \
               jobexec.sh
-        if [[ "$batchmode" == "pbs" ]]; then
+       elif [[ "$batchmode" == "pbs" ]]; then
             qsub \
 	      -V \
 	      -q clas12 \
