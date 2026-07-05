@@ -40,7 +40,7 @@ if [[ "$RUN_SIM" -eq 1 ]]; then
 
     if [[ ! -f $ABoutfile ]]
     then
-	abconv -p $THIS_AB_CONFIG -s $FIRSTEVENT -e $LASTEVENT --plot-off $datafile -o $ABoutfile >> $ablogfile 2>&1
+	/home/$USER/afterburner/install/bin/abconv -p $THIS_AB_CONFIG -s $FIRSTEVENT -e $LASTEVENT --plot-off $datafile -o $ABoutfile >> $ablogfile 2>&1
 	echo "AB complete at $(date) on $(hostname)"
     fi
     
