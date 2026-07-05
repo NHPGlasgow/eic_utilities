@@ -260,29 +260,37 @@ for file in "${files[@]}"; do
         export LASTEVENT=$(( NSKIP + neventsim - 1 ))
         export JUGGLER_N_EVENTS=$neventsim
 
-        outfile="$WORK_RECON_DIR/${BASENAME}_recon.root"
+	simoutfile="$WORK_OUT_DIR/${BASENAME}.edm4hep.root"
+        recoutfile="$WORK_RECON_DIR/${BASENAME}_recon.root"
+	
+        echo "Job $job, events [$FIRSTEVENT:$LASTEVENT]"
 
-        echo "Job $job ? events [$FIRSTEVENT:$LASTEVENT]"
-
-        if [[ -f "$outfile" ]]; then
-            echo "Skipping (output exists)"
+	if [[ $SIM_ONLY -eq 1 ]]; then
+            if [[ -f "$simoutfile" ]]; then
+		echo "Skipping (sim output exists)"
+		continue
+            fi
+	    
+        elif [[ -f "$recoutfile" ]]; then
+            echo "Skipping (recon output exists)"
             continue
         fi
-
-       if [[ "$batchmode" == "slurm" ]]; then
+	
+	if [[ "$batchmode" == "slurm" ]]; then
             sbatch \
               -J "$JOBNAME" \
               -o "$FARM_LOG_DIR/${JOBNAME}_out.log" \
               -e "$FARM_LOG_DIR/${JOBNAME}_err.log" \
               jobexec.sh
-       elif [[ "$batchmode" == "pbs" ]]; then
+	elif [[ "$batchmode" == "pbs" ]]; then
             qsub \
-	      -V \
-	      -q clas12 \
-              -N "$JOBNAME" \
-              -o "$FARM_LOG_DIR" \
-              -e "$FARM_LOG_DIR" \
-              jobexec.sh
+		-V \
+		-q clas12 \
+		-l mem=4gb \
+		-N "$JOBNAME" \
+		-o "$FARM_LOG_DIR" \
+		-e "$FARM_LOG_DIR" \
+		jobexec.sh
         elif [[ "$batchmode" == "npc" ]]; then
 	    echo "[NPC] Running $JOBNAME locally"
 	    ./jobexec.sh >> "$FARM_LOG_DIR/${JOBNAME}.log" 2>&1 &

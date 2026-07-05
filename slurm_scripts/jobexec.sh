@@ -5,6 +5,7 @@
 #SBATCH --export=ALL
 
 #PBS -V
+#PBS -l walltime=48:00:00,file=200000000kb
 
 echo "Job started at $(date) on $(hostname)"
 cd $SIM_DIR

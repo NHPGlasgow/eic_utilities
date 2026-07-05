@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 source /opt/detector/epic-main/bin/thisepic.sh
 source /opt/local/bin/eicrecon-this.sh
 
@@ -43,7 +45,7 @@ if [[ "$RUN_SIM" -eq 1 ]]; then
     fi
     
     echo "Running simulation stage"
-    ddsim --steeringFile steering.py \
+    npsim --steeringFile steering.py \
 	  --numberOfEvents ${JUGGLER_N_EVENTS} \
 	--compactFile ${DETECTOR_PATH_NAME} \
 	--inputFiles ${JUGGLER_MC_FILE}  \
