@@ -4,11 +4,12 @@
 #SBATCH --mail-user="gary.penman@glasgow.ac.uk"
 #SBATCH --export=ALL
 
-#PBS -V
-#PBS -l walltime=48:00:00,file=200000000kb
-
 echo "Job started at $(date) on $(hostname)"
 cd "$SIM_DIR" || exit 1
+
+echo "HOSTNAME=$(hostname)"
+echo "SINGULARITY=$(which singularity)"
+singularity --version
 
 if [ ! -d /cvmfs/singularity.opensciencegrid.org ]; then
     echo "CVMFS not mounted, probing..."
@@ -22,7 +23,7 @@ ls /cvmfs/singularity.opensciencegrid.org/eicweb >/dev/null || {
 
 echo "Testing container startup..."
 time singularity exec \
-    --bind /w,/scratch \
+    --bind /w,/scratch,/home \
     /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:26.05.0-stable \
     /bin/echo "container OK"
 

@@ -1,17 +1,53 @@
 #!/bin/bash
-#PBS -V 
-#PBS -l walltime=48:00:00,file=200000000kb
+#SBATCH --job-name="mytestscript"
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user="gary.penman@glasgow.ac.uk"
+#SBATCH --export=ALL
 
+set -e
+
+echo "============================================================"
 echo "Job started at $(date) on $(hostname)"
-cd $SIM_DIR
+echo "============================================================"
 
-if [ ! -d /cvmfs/singularity.opensciencegrid.org ]; then
-  echo "CVMFS not mounted, probing..."
-  cvmfs_config probe
+cd "$SIM_DIR" || {
+    echo "ERROR: Cannot cd to SIM_DIR=$SIM_DIR"
+    exit 1
+}
+
+echo "HOSTNAME=$(hostname)"
+echo "SINGULARITY=$(/usr/bin/which singularity)"
+singularity --version
+
+echo
+echo "Using local eic-shell:"
+echo "/w/work5/home/garyp/eic/eic-shell"
+
+echo
+echo "Container image:"
+ls -lh /w/work5/home/garyp/eic/local/lib/eic_xl-nightly.sif
+
+echo
+echo "Testing local container startup..."
+time /w/work5/home/garyp/eic/eic-shell -- /bin/true
+
+rc=$?
+
+if [ $rc -ne 0 ]; then
+    echo "ERROR: container startup test failed"
+    exit $rc
 fi
 
-#singularity exec --bind /w,/scratch /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly ./ddsim.sh
+echo "Container startup complete at $(date)"
+echo
 
-singularity exec --bind /w,/scratch /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.08.0-stable ./ddsim.sh
-#singularity exec --bind /w,/scratch /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.07-stable ./ddsim.sh
-#singularity exec --bind /w,/scratch /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:25.06.1-stable ./ddsim.sh
+echo "Starting DDSim workflow..."
+time /w/work5/home/garyp/eic/eic-shell -- ./ddsim.sh
+
+rc=$?
+
+echo
+echo "ddsim.sh exited with code $rc"
+echo "Job finished at $(date)"
+
+exit $rc
