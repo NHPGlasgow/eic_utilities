@@ -178,6 +178,7 @@ mkdir -p "$WORK_OUT_DIR" "$WORK_RECON_DIR" "$WORK_LOG_DIR" "$WORK_AB_LOG_DIR" "$
 
 export SIM_DIR=$PWD
 export STEERINGFILE="$PWD/steering.py"
+export EXEC_SCRIPT="$PWD/ddsim.sh"
 
 # -------------------------------
 # Loop over input files

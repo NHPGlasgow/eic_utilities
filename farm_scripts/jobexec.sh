@@ -15,21 +15,26 @@ cd "$SIM_DIR" || {
     exit 1
 }
 
+if [[ -z "$EXEC_SCRIPT" ]]; then
+    echo "ERROR: EXEC_SCRIPT not set"
+    exit 1
+fi
+
 echo "HOSTNAME=$(hostname)"
 echo "SINGULARITY=$(/usr/bin/which singularity)"
 singularity --version
 
 echo
 echo "Using local eic-shell:"
-echo "/w/work5/home/garyp/eic/eic-shell"
+echo "/w/work5/eic/Software//eic-shell"
 
 echo
 echo "Container image:"
-ls -lh /w/work5/home/garyp/eic/local/lib/eic_xl-nightly.sif
+ls -lh /w/work5/eic/Software/local/lib/eic_xl-nightly.sif
 
 echo
 echo "Testing local container startup..."
-time /w/work5/home/garyp/eic/eic-shell -- /bin/true
+time /w/work5/eic/Software/eic-shell -- /bin/true
 
 rc=$?
 
@@ -42,12 +47,12 @@ echo "Container startup complete at $(date)"
 echo
 
 echo "Starting DDSim workflow..."
-time /w/work5/home/garyp/eic/eic-shell -- ./ddsim.sh
+time /w/work5/eic/Software/eic-shell -- bash -lc "./${EXEC_SCRIPT} ${EXEC_ARGS}"
 
 rc=$?
 
 echo
-echo "ddsim.sh exited with code $rc"
+echo "${EXEC_SCRIPT} exited with code $rc"
 echo "Job finished at $(date)"
 
 exit $rc
