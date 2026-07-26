@@ -1,0 +1,30 @@
+# EIC ePIC timeframe builder for 9x130 beam settings
+max_events: 100000
+timeframe_duration: 2000.0 # in ns
+bunch_crossing_period: 10.0 # in ns
+introduce_offsets: true
+sources:
+  - name: signal
+    input_files:
+      - /w/work6/home/gp140f/9x130_ddvcs_ee_hplus/rootfiles/9x130_ddvcs_ee_hplus_0.edm4hep.root    
+    static_number_of_events: true
+    static_events_per_timeframe: 1
+    use_bunch_crossing: true
+    generator_status_offset: 0
+  - name: brem_bg
+    input_files:
+      - /w/work6/home/gp140f/brems_9x130/rootfiles/brems_9x130_0.edm4hep.root
+      - /w/work6/home/gp140f/brems_9x130/rootfiles/brems_9x130_1.edm4hep.root
+      - /w/work6/home/gp140f/brems_9x130/rootfiles/brems_9x130_2.edm4hep.root
+      - /w/work6/home/gp140f/brems_9x130/rootfiles/brems_9x130_3.edm4hep.root
+      - /w/work6/home/gp140f/brems_9x130/rootfiles/brems_9x130_4.edm4hep.root
+      - /w/work6/home/gp140f/brems_9x130/rootfiles/brems_9x130_5.edm4hep.root
+      - /w/work6/home/gp140f/brems_9x130/rootfiles/brems_9x130_6.edm4hep.root
+      - /w/work6/home/gp140f/brems_9x130/rootfiles/brems_9x130_7.edm4hep.root
+      - /w/work6/home/gp140f/brems_9x130/rootfiles/brems_9x130_8.edm4hep.root
+      - /w/work6/home/gp140f/brems_9x130/rootfiles/brems_9x130_9.edm4hep.root
+    static_number_of_events: false
+    mean_event_frequency: 1.0 # in GHz
+    use_bunch_crossing: true
+    generator_status_offset: 2000
+
