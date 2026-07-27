@@ -24,17 +24,19 @@ echo "HOSTNAME=$(hostname)"
 echo "SINGULARITY=$(/usr/bin/which singularity)"
 singularity --version
 
-echo
-echo "Using local eic-shell:"
-echo "/w/work5/eic/Software//eic-shell"
+SOFTWARE_DIR="/w/work5/eic/Software/"
 
 echo
-echo "Container image:"
-ls -lh /w/work5/eic/Software/local/lib/eic_xl-nightly.sif
+echo "Using local eic-shell:"
+echo "${SOFTWARE_DIR}l"
+
+#echo
+#echo "Container image:"
+#ls -lh ${SOFTARE_DIR}/local/lib/eic_xl-nightly.sif
 
 echo
 echo "Testing local container startup..."
-time /w/work5/eic/Software/eic-shell -- /bin/true
+time ${SOFTWARE_DIR}/eic-shell -- /bin/true
 
 rc=$?
 
@@ -47,7 +49,7 @@ echo "Container startup complete at $(date)"
 echo
 
 echo "Starting DDSim workflow..."
-time /w/work5/eic/Software/eic-shell -- bash -lc "./${EXEC_SCRIPT} ${EXEC_ARGS}"
+time ${SOFTWARE_DIR}/eic-shell -- bash -c "./${EXEC_SCRIPT} ${EXEC_ARGS}"
 
 rc=$?
 
