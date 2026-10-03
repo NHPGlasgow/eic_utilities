@@ -3,7 +3,8 @@
 set -e
 
 source /opt/detector/epic-main/bin/thisepic.sh
-source /opt/local/bin/eicrecon-this.sh
+#source /opt/local/bin/eicrecon-this.sh
+source /home/gp140f/eic/EICrecon/install/bin/eicrecon-this.sh
 
 export DETECTOR_CONFIG=$THIS_DETECTOR_CONFIG
 export DETECTOR_PATH_NAME="$DETECTOR_PATH/$DETECTOR_CONFIG.xml"
@@ -17,7 +18,7 @@ echo "ddsim.sh configuration:"
 echo "  RUN_SIM   = $RUN_SIM"
 echo "  RUN_RECON = $RUN_RECON"
 
-tempdir=/scratch/$USER/$JOBNAME
+tempdir=/scratch1/$USER/$JOBNAME
 mkdir -p ${tempdir}
 cd $tempdir
 cp $STEERINGFILE $tempdir
@@ -38,7 +39,7 @@ export FULL_SIM_FILE=$WORK_OUT_DIR"/"$BASENAME".edm4hep.root"
 
 if [[ "$RUN_SIM" -eq 1 ]]; then
 
-    if [[ ! -f $ABoutfile ]]
+    if [[ ! -f "${ABoutfile}.hepmc3.tree.root" ]]
     then
 	/home/$USER/eic/afterburner/install/bin/abconv -p $THIS_AB_CONFIG -s $FIRSTEVENT -e $LASTEVENT --plot-off $datafile -o $ABoutfile >> $ablogfile 2>&1
 	echo "AB complete at $(date) on $(hostname)"

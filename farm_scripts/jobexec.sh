@@ -20,41 +20,44 @@ if [[ -z "$EXEC_SCRIPT" ]]; then
     exit 1
 fi
 
+LOCAL_SIF="/w/work6/home/gp140f/eic/local/lib/eic_xl-26.07.1-stable.sif"
+
 echo "HOSTNAME=$(hostname)"
 echo "SINGULARITY=$(/usr/bin/which singularity)"
 singularity --version
 
-SOFTWARE_DIR="/w/work5/eic/Software/"
+echo "LOCAL_SIF=$LOCAL_SIF"
 
-echo
-echo "Using local eic-shell:"
-echo "${SOFTWARE_DIR}l"
-
-#echo
-#echo "Container image:"
-#ls -lh ${SOFTARE_DIR}/local/lib/eic_xl-nightly.sif
-
-echo
-echo "Testing local container startup..."
-time ${SOFTWARE_DIR}/eic-shell -- /bin/true
-
-rc=$?
-
-if [ $rc -ne 0 ]; then
-    echo "ERROR: container startup test failed"
-    exit $rc
+if [[ ! -f "$LOCAL_SIF" ]]; then
+    echo "ERROR: Missing SIF image"
+    exit 1
 fi
+
+echo "EXEC_SCRIPT=$EXEC_SCRIPT"
+echo "EXEC_ARGS=$EXEC_ARGS"
+
+echo
+echo "Testing container startup..."
+
+time singularity exec \
+    --bind /cvmfs,/scratch1,/media,/w \
+    "$LOCAL_SIF" \
+    /bin/true
 
 echo "Container startup complete at $(date)"
 echo
 
 echo "Starting DDSim workflow..."
-time ${SOFTWARE_DIR}/eic-shell -- bash -c "./${EXEC_SCRIPT} ${EXEC_ARGS}"
+
+time singularity exec \
+    --bind /cvmfs,/scratch1,/media,/w \
+    "$LOCAL_SIF" \
+    "$EXEC_SCRIPT" $EXEC_ARGS
 
 rc=$?
 
 echo
-echo "${EXEC_SCRIPT} exited with code $rc"
+echo "$EXEC_SCRIPT exited with code $rc"
 echo "Job finished at $(date)"
 
 exit $rc

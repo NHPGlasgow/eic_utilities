@@ -100,7 +100,7 @@ first_seg=${6:-0}
 abconfig=${7:-"0"}
 outdir=${8:-"$PWD/output"}
 
-MAX_JOBS=10
+MAX_JOBS=25
 pids=()
 
 # -------------------------------
