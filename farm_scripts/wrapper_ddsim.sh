@@ -170,11 +170,12 @@ export WORK_DIR
 
 export WORK_OUT_DIR="$WORK_DIR/rootfiles"
 export WORK_RECON_DIR="$WORK_DIR/recon"
+export WORK_RECON_LOG_DIR="$WORK_DIR/recon_logs"
 export WORK_LOG_DIR="$WORK_DIR/logs"
 export WORK_AB_LOG_DIR="$WORK_DIR/ab_logs"
 export FARM_LOG_DIR="$WORK_DIR/farm_logs"
 
-mkdir -p "$WORK_OUT_DIR" "$WORK_RECON_DIR" "$WORK_LOG_DIR" "$WORK_AB_LOG_DIR" "$FARM_LOG_DIR"
+mkdir -p "$WORK_OUT_DIR" "$WORK_RECON_DIR" "$WORK_RECON_LOG_DIR" "$WORK_LOG_DIR" "$WORK_AB_LOG_DIR" "$FARM_LOG_DIR"
 
 export SIM_DIR=$PWD
 export STEERINGFILE="$PWD/steering.py"
